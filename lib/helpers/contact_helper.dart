@@ -29,14 +29,14 @@ class ContactHelper { //essa classe não vai poder ter varias instancias ao long
       return _db;
     }
   }
-
+//FUNÇAO PARA INICIAR O BANCO DE DADOS.
   Future<Database> initDb() async {
     final databasesPath = await getDatabasesPath();   //local do meu banco de daods.
-    final path = join(databasesPath, "contacts.db");  //arquivo que vai estar armazenado eu banco de dados.
-    
+    final path = join(databasesPath, "contactsnew.db");  //arquivo que vai estar armazenado eu banco de dados.
+    print(path);
     return await openDatabase(path, version: 1, onCreate: (Database db, int newerVersion) async {  //abrir banco de dados
       await db.execute(
-        "CREATE TABLE $contactTable($idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $emailColumn TEXT"
+        "CREATE TABLE $contactTable($idColumn INTEGER PRIMARY KEY, $nameColumn TEXT, $emailColumn TEXT,"
             "$phoneColumn TEXT, $imgColumn TEXT)"
       );
     });
@@ -73,8 +73,8 @@ class ContactHelper { //essa classe não vai poder ter varias instancias ao long
 
   Future<List>getAllContacts() async {
     Database dbContact = await db;
-    List listMap = await dbContact.rawQuery("SELECT * FROM $contactTable")
-    List<Contact> listContact = List();
+    List listMap = await dbContact.rawQuery("SELECT * FROM $contactTable");
+    List<Contact> listContact = [];
     for(Map m in listMap){
       listContact.add(Contact.fromMap(m));
     }
@@ -100,6 +100,8 @@ class Contact {              //essa classe vai definir tudo que eu contato vai a
   String email;
   String phone;
   String img;
+
+  Contact();
 
   Contact.fromMap(Map map){                             //Aqui eu peguei os dados de um mapa e passei pro meu contato. pegar do banco de dados.
     id = map[idColumn];
